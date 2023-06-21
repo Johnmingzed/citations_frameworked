@@ -27,6 +27,11 @@ class Citation
     #[ORM\ManyToOne(inversedBy: 'citations')]
     private ?Auteur $auteur_id = null;
 
+    public function __construct()
+    {
+        $this->date_modif = new \DateTime();
+    }
+
     public function getId(): ?int
     {
         return $this->id;

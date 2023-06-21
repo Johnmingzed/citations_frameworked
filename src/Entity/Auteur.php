@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\AuteurRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -32,6 +33,7 @@ class Auteur
     public function __construct()
     {
         $this->citations = new ArrayCollection();
+        $this->date_modif = new \DateTime();
     }
 
     public function getId(): ?int
