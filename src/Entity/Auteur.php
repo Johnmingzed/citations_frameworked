@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\DateModifTrait;
 use App\Repository\AuteurRepository;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -13,6 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'auteurs')]
 class Auteur
 {
+    use DateModifTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -23,9 +25,6 @@ class Auteur
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $bio = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $date_modif = null;
 
     #[ORM\OneToMany(mappedBy: 'auteur_id', targetEntity: Citation::class)]
     private Collection $citations;
@@ -65,18 +64,6 @@ class Auteur
         return $this;
     }
 
-    public function getDateModif(): ?\DateTimeInterface
-    {
-        return $this->date_modif;
-    }
-
-    public function setDateModif(\DateTimeInterface $date_modif): static
-    {
-        $this->date_modif = $date_modif;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Citation>
      */
@@ -106,5 +93,4 @@ class Auteur
 
         return $this;
     }
-
 }

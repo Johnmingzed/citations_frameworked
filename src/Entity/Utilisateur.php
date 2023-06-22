@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\DateModifTrait;
 use App\Repository\UtilisateurRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -14,6 +14,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[UniqueEntity(fields: ['mail'], message: 'Il existe déjà un utilisateur lié à cette adresse mail.')]
 class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    use DateModifTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -36,9 +38,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 31, nullable: true)]
     private ?string $nom = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $date_modif = null;
 
     #[ORM\Column(length: 127, nullable: true)]
     private ?string $token = null;
@@ -141,18 +140,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function setNom(?string $nom): static
     {
         $this->nom = $nom;
-
-        return $this;
-    }
-
-    public function getDateModif(): ?\DateTimeInterface
-    {
-        return $this->date_modif;
-    }
-
-    public function setDateModif(\DateTimeInterface $date_modif): static
-    {
-        $this->date_modif = $date_modif;
 
         return $this;
     }
