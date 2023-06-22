@@ -4,12 +4,12 @@
 
 {% block main %}
 <div class="row">
-    <div class="col-4 mx-auto mt-4">
+    <div class="col-4 mx-auto">
 
         {{ form_errors(registrationForm) }}
 
         {{ form_start(registrationForm) }}
-        <h1 class="h3 mb-3 font-weight-normal">Créer un comppte</h1>
+        <h1 class="h3 mb-3 font-weight-normal">Créer un compte</h1>
         {{ form_row(registrationForm.mail) }}
         {{ form_row(registrationForm.plainPassword) }}
         <div class="form-check mt-3">

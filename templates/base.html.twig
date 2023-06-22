@@ -19,7 +19,12 @@
     <header class="container-lg">
         {% include "_partials/_nav.html.twig" %}
     </header>
-    <main class="container-lg">
+    <main class="container-lg py-4">
+        {% if message is defined %}
+        <div class="container-lg alert alert-success mb-4" role="alert">
+            {{ message }}
+        </div>
+        {% endif %}
         {% block main %}{% endblock %}
     </main>
 

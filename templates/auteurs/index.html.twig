@@ -4,13 +4,34 @@
 
 {% block main %}
 
-<div class="example-wrapper">
-    <h1>On va lister les auteurs</h1>
+<h1>Liste des auteurs</h1>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/xampp/htdocs/citations_frameworked/src/Controller/AuteursController.php'|file_link(0) }}">src/Controller/AuteursController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/xampp/htdocs/citations_frameworked/templates/auteurs/index.html.twig'|file_link(0) }}">templates/auteurs/index.html.twig</a></code></li>
-    </ul>
-</div>
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="">Auteur</th>
+            <th class="">Biographie</th>
+            <th class="">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for auteur in auteurs %}
+        <tr>
+            <td>{{ auteur.auteur }}</td>
+            <td>
+                {% if auteur.bio %}
+                {{ auteur.bio|slice(0,100)~'[...]' }}
+                {% endif %}
+            </td>
+            <td class="align-middle">
+                <a class="btn btn-outline-primary m-1" href="{{ path('app_auteurs_detail', {id: auteur.id}) }}"
+                    role="button">Modifier</a>
+                <a class="btn btn-outline-danger m-1" href="{{ path('app_auteurs_suppression', {id: auteur.id}) }}"
+                    role="button">Supprimer</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 {% endblock %}

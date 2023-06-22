@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails sur {{ auteur.auteur }}{% endblock %}
+
+{% block main %}
+
+<div class="d-flex justify-content-between">
+    <h1>{{ auteur.auteur }}</h1>
+    <span class="align-bottom">Fiche mise à jour le {{ auteur.datemodif|date("d/m/Y à H:i:s") }}</span>
+</div>
+
+{% if auteur.bio %}
+<h2 class="h3">Biographie</h2>
+<p>{{ auteur.bio}}</p>
+{% else %}
+<p class="text-center">Aucune information biographique enregistrée</p>
+{% endif %}
+
+{% endblock %}
