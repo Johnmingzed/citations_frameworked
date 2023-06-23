@@ -4,13 +4,41 @@
 
 {% block main %}
 
-<div class="example-wrapper">
-    <h1>On va lister les citations</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/xampp/htdocs/citations_frameworked/src/Controller/CitationsController.php'|file_link(0) }}">src/Controller/CitationsController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/xampp/htdocs/citations_frameworked/templates/citations/index.html.twig'|file_link(0) }}">templates/citations/index.html.twig</a></code></li>
-    </ul>
+<div class="d-flex align-items-center justify-content-between">
+    <h1>Liste des citations</h1>
+    <div>
+        <a class="btn btn-outline-success m-1" href="{{ path('app_citations') }}" role="button">Ajouter une
+            citation</a>
+    </div>
 </div>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="">Citation</th>
+            <th class="">Auteur</th>
+            <th class="">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for citation in citations %}
+        <tr>
+            <td>
+                {% if citation.citation|length > 100 %}
+                {{ citation.citation|slice(0,100)~'[...]' }}
+                {% elseif citation.citation|length <= 100 %} {{ citation.citation}} {% endif %} </td>
+            <td>
+                {# Attention ! Ça plante en cas d'auteur NULL #}
+                {{ citation.getAuteurId().getAuteur() }}
+            </td>
+            <td class="align-middle">
+                <a class="btn btn-outline-primary m-1" href="{{ path('app_citations', {id: citation.id}) }}"
+                    role="button">Afficher/Modifier</a>
+                <a class="btn btn-outline-danger m-1" href="{{ path('app_citations', {id: citation.id}) }}"
+                    role="button">Supprimer</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}

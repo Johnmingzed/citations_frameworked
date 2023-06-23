@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Trait\DateModifTrait;
+use App\Repository\AuteurRepository;
 use App\Repository\CitationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
