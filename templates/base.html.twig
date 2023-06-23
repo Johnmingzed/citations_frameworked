@@ -21,7 +21,7 @@
     </header>
     <main class="container-lg py-4">
         {% if message is defined %}
-        <div class="container-lg alert alert-success mb-4" role="alert">
+        <div class="container-lg alert {{ message_type }} mb-4" role="alert">
             {{ message }}
         </div>
         {% endif %}

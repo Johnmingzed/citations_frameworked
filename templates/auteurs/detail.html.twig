@@ -4,16 +4,24 @@
 
 {% block main %}
 
-<div class="d-flex justify-content-between">
-    <h1>{{ auteur.auteur }}</h1>
-    <span class="align-bottom">Fiche mise à jour le {{ auteur.datemodif|date("d/m/Y à H:i:s") }}</span>
-</div>
+<section>
+    <div class="d-flex justify-content-between">
+        <h1>{{ auteur.auteur }}</h1>
+        <span class="align-bottom">Fiche mise à jour le {{ auteur.datemodif|date("d/m/Y à H:i:s") }}</span>
+    </div>
 
-{% if auteur.bio %}
-<h2 class="h3">Biographie</h2>
-<p>{{ auteur.bio}}</p>
-{% else %}
-<p class="text-center">Aucune information biographique enregistrée</p>
-{% endif %}
+    {% if auteur.bio %}
+    <h2 class="h3">Biographie</h2>
+    <p>{{ auteur.bio|e}}</p>
+    {% else %}
+    <p class="text-center">Aucune information biographique enregistrée</p>
+    {% endif %}
+    <div class="text-end">
+        <a class="btn btn-outline-primary m-1" href="{{ path('app_auteurs_modifier', {id: auteur.id}) }}"
+            role="button">Modifier</a>
+        <a class="btn btn-outline-danger m-1" href="{{ path('app_auteurs_supprimer', {id: auteur.id}) }}"
+            role="button">Supprimer</a>
+    </div>
+</section>
 
 {% endblock %}

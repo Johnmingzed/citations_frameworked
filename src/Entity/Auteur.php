@@ -42,7 +42,7 @@ class Auteur
 
     public function getAuteur(): ?string
     {
-        return $this->auteur;
+        return html_entity_decode($this->auteur);
     }
 
     public function setAuteur(string $auteur): static
@@ -54,7 +54,7 @@ class Auteur
 
     public function getBio(): ?string
     {
-        return $this->bio;
+        return html_entity_decode($this->bio);
     }
 
     public function setBio(?string $bio): static
