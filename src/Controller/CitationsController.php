@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Auteur;
 use App\Entity\Citation;
 use App\Form\CitationFormType;
 use App\Repository\AuteurRepository;
@@ -14,13 +15,24 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CitationsController extends AbstractController
 {
+    private $citations;
+
+    public function __construct(CitationRepository $citationRepository)
+    {
+        return $this->citations = $citationRepository->createQueryBuilder('c')
+        ->leftJoin('c.auteur_id', 'a')
+        ->orderBy('a.auteur', 'ASC')
+        ->getQuery()
+        ->getResult();
+    }
+
     #[Route('/citations', name: 'app_citations')]
-    public function index(CitationRepository $citationRepository, AuteurRepository $auteurRepository): Response
+    public function index(AuteurRepository $auteurRepository): Response
     {
         return $this->render('citations/index.html.twig', [
             'controller_name' => 'CitationsController',
-            'auteurs' => $auteurRepository->findBy([]),
-            'citations' => $citationRepository->findBy([], ['auteur_id' => 'asc'])
+            'auteurs' => $auteurRepository->findBy([], ['auteur' => 'asc']),
+            'citations' => $this->citations
         ]);
     }
 
@@ -28,9 +40,10 @@ class CitationsController extends AbstractController
     public function detail(citationRepository $citationRepository, int $id): Response
     {
         if (!$citationRepository->find($id)) {
+            // Retour sur la page d'index (⚠️ code redondant)
             return $this->render('citations/index.html.twig', [
                 'controller_name' => 'CitationsController',
-                'citations' => $citationRepository->findBy([]),
+                'citations' => $this->citations,
                 'message' => 'Action impossible : Référence inexistante.',
                 'message_type' => 'alert-danger'
             ]);
@@ -45,17 +58,18 @@ class CitationsController extends AbstractController
     public function modification(AuteurRepository $auteurRepository, CitationRepository $citationRepository, int $id, Request $request): Response
     {
         $citation = $citationRepository->find($id);
+        $auteurs = $auteurRepository->findBy([], ['auteur' => 'ASC']);
         if (!$citation) {
             // Retour sur la page d'index (⚠️ code redondant)
             return $this->render('citations/index.html.twig', [
                 'controller_name' => 'CitationsController',
-                'auteurs' => $auteurRepository->findBy([]),
-                'citations' => $citationRepository->findBy([], ['auteur_id' => 'asc']),
+                'auteurs' => $auteurs,
+                'citations' => $this->citations,
                 'message' => 'Action impossible : Référence inexistante.',
                 'message_type' => 'alert-danger'
             ]);
         }
-        $form = $this->createForm(CitationFormType::class, $citation);
+        $form = $this->createForm(CitationFormType::class, $citation, ['auteur' => $auteurs]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -72,8 +86,8 @@ class CitationsController extends AbstractController
             // Retour sur la page d'index (⚠️ code redondant)
             return $this->render('citations/index.html.twig', [
                 'controller_name' => 'CitationsController',
-                'auteurs' => $auteurRepository->findBy([]),
-                'citations' => $citationRepository->findBy([], ['auteur_id' => 'asc']),
+                'auteurs' => $auteurs,
+                'citations' => $this->citations,
                 'message' => $message,
                 'message_type' => $message_type
             ]);
@@ -90,7 +104,8 @@ class CitationsController extends AbstractController
     public function ajouter(AuteurRepository $auteurRepository, citationRepository $citationRepository, Request $request): Response
     {
         $citation = new Citation();
-        $form = $this->createForm(CitationFormType::class, $citation);
+        $auteurs = $auteurRepository->findBy([], ['auteur' => 'ASC']);
+        $form = $this->createForm(CitationFormType::class, $citation, ['auteur' => $auteurs]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -107,8 +122,8 @@ class CitationsController extends AbstractController
             // Retour sur la page d'index (⚠️ code redondant)
             return $this->render('citations/index.html.twig', [
                 'controller_name' => 'CitationsController',
-                'auteurs' => $auteurRepository->findBy([]),
-                'citations' => $citationRepository->findBy([], ['auteur_id' => 'asc']),
+                'auteurs' => $auteurs,
+                'citations' => $this->citations,
                 'message' => $message,
                 'message_type' => $message_type
             ]);
@@ -140,7 +155,7 @@ class CitationsController extends AbstractController
         return $this->render('citations/index.html.twig', [
             'controller_name' => 'citationsController',
             'auteurs' => $auteurRepository->findBy([]),
-            'citations' => $citationRepository->findBy([], ['auteur_id' => 'asc']),
+            'citations' => $this->citations,
             'message' => 'La citation a été effacé',
             'message_type' => 'alert-success'
         ]);
