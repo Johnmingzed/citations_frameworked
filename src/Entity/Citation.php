@@ -41,7 +41,7 @@ class Citation
 
     public function getCitation(): ?string
     {
-        return $this->citation;
+        return html_entity_decode($this->citation);
     }
 
     public function setCitation(string $citation): static
@@ -53,7 +53,7 @@ class Citation
 
     public function getExplication(): ?string
     {
-        return $this->explication;
+        return html_entity_decode($this->explication);
     }
 
     public function setExplication(?string $explication): static

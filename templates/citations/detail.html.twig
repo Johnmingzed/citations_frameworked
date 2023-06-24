@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}La citation en détails{% endblock %}
+
+{% block main %}
+
+<section>
+    <div class="d-flex justify-content-between">
+        <h1>La citation en détails</h1>
+        <span class="align-bottom">Fiche mise à jour le {{ citation.datemodif|date("d/m/Y à H:i:s") }}</span>
+    </div>
+    <p class="fs-3">{{ citation.citation|e}}</p>
+    {% if citation.explication %}
+    <h2 class="h3">Excplication</h2>
+    <p>{{ citation.explication|e}}</p>
+    {% else %}
+    <p class="text-center">Aucune explication enregistrée</p>
+    {% endif %}
+    {% if citation.auteurId %}
+    <p class="text-end fst-italic fs-4">{{ citation.auteurId.auteur }}</p>
+    {% else %}
+    <p class="text-end fst-italic fs-4">- Anonyme -</p>
+    {% endif %}
+    <div class="text-end">
+        <a class="btn btn-outline-primary m-1" href="{{ path('app_citations_modifier', {id: citation.id}) }}"
+            role="button">Modifier</a>
+        <a class="btn btn-outline-danger m-1" href="{{ path('app_citations_supprimer', {id: citation.id}) }}"
+            role="button">Supprimer</a>
+    </div>
+</section>
+
+{% endblock %}

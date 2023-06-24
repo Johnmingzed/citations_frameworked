@@ -26,12 +26,10 @@ class AuteurFormType extends AbstractType
                     'class' => 'form-control',
                     'rows' => '8'
                 ],
-                'label' => 'Biographie',
+                'label' => 'Biographie (facultatif)',
                 'sanitize_html' => true,
                 'required' => false
-            ])
-            // ->add('date_modif')
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

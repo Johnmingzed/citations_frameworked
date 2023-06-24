@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajout d'une nouvelle citation{% endblock %}
+
+{% block main %}
+
+<div class="row">
+    <div class="col-sm-10 col-md-8 col-lg-6 mx-auto">
+
+        {{ form_errors(citationForm) }}
+
+        {{ form_start(citationForm) }}
+        <h1 class="h3 mb-3 font-weight-normal">Ajout d'une nouvelle citation</h1>
+        {{ form_row(citationForm.auteur_id) }}
+        {{ form_row(citationForm.citation) }}
+        {{ form_row(citationForm.explication) }}
+        <div class="d-flex justify-content-between">
+            <a class="btn btn-lg btn-outline-danger mt-3" href="{{ path('app_citations') }}">Annuler</a>
+            <button type="submit" class="btn btn-lg btn-outline-success mt-3">Ajouter</button>
+        </div>
+        {{ form_end(citationForm) }}
+
+    </div>
+</div>
+
+{% endblock %}
