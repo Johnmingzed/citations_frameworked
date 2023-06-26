@@ -40,7 +40,7 @@ class UtilisateursController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $message = 'utilisateur modifié avec succès.';
+            $message = 'Utilisateur modifié avec succès.';
             $message_type = 'alert-success';
 
             try {

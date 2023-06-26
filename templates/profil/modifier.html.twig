@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modification de {{ utilisateur.mail }}{% endblock %}
+{% block title %}Modification du profil{% endblock %}
 
 {% block main %}
 
@@ -10,24 +10,21 @@
         {{ form_errors(utilisateurForm) }}
 
         {{ form_start(utilisateurForm) }}
-        <h1 class="h3 mb-3 font-weight-normal">Modification de {{ utilisateur.mail }}</h1>
+        <h1 class="h3 mb-3 font-weight-normal">Modification de votre profil</h1>
         {{ form_row(utilisateurForm.prenom) }}
         {{ form_row(utilisateurForm.nom) }}
         {{ form_row(utilisateurForm.mail) }}
-        {# Exclure l'affichage du champ "password" #}
-        {% if utilisateur.password is null %}
+        {% if utilisateur.password is null or passwordchange is defined %}
         {{ form_row(utilisateurForm.password) }}
         {% else %}
         {% do utilisateurForm.password.setRendered() %}
         {% endif %}
-        <div class="form-check mt-3">
-            {{ form_widget(utilisateurForm.admin) }}
-            {{ form_label(utilisateurForm.admin) }}
-        </div>
+        {% do utilisateurForm.admin.setRendered() %}
         <div class="d-flex justify-content-between gap-3">
-            <a class="btn btn-lg btn-outline-danger mt-3" href="{{ path('app_utilisateurs') }}">Annuler</a>
+            <a class="btn btn-lg btn-outline-danger mt-3" href="{{ path('app_main') }}">Annuler</a>
             {% if utilisateur.password is not null %}
-            <a class="btn btn-lg btn-outline-warning mt-3" href="{{ path('app_utilisateurs_reset_pw', {id: utilisateur.id}) }}">Réinitialiser le mot de passe</a>
+            <a class="btn btn-lg btn-outline-warning mt-3" href="{{ path('app_profil_change_pw') }}">Changer le mot de
+                passe</a>
             {% endif %}
             <button type="submit" class="btn btn-lg btn-outline-primary mt-3">Modifier</button>
         </div>

@@ -122,7 +122,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getPrenom(): ?string
     {
-        return $this->prenom;
+        return html_entity_decode($this->prenom);
     }
 
     public function setPrenom(?string $prenom): static
@@ -134,7 +134,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getNom(): ?string
     {
-        return $this->nom;
+        return html_entity_decode($this->nom);
     }
 
     public function setNom(?string $nom): static
