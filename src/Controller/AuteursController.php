@@ -26,9 +26,8 @@ class AuteursController extends AbstractController
     public function detail(AuteurRepository $auteurRepository, int $id): Response
     {
         if (!$auteurRepository->find($id)) {
-            return $this->render('auteurs/index.html.twig', [
-                'controller_name' => 'AuteursController',
-                'auteurs' => $auteurRepository->findBy([]),
+            // Retour sur la page d'index
+            return $this->redirectToRoute('app_auteurs', [
                 'message' => 'Action impossible : Référence inexistante.',
                 'message_type' => 'alert-danger'
             ]);
@@ -44,10 +43,8 @@ class AuteursController extends AbstractController
     {
         $auteur = $auteurRepository->find($id);
         if (!$auteur) {
-            // Retour sur la page d'index (⚠️ code redondant)
-            return $this->render('auteurs/index.html.twig', [
-                'controller_name' => 'AuteursController',
-                'auteurs' => $auteurRepository->findBy([], ['auteur' => 'asc']),
+            // Retour sur la page d'index
+            return $this->redirectToRoute('app_auteurs', [
                 'message' => 'Action impossible : Référence inexistante.',
                 'message_type' => 'alert-danger'
             ]);
@@ -66,10 +63,8 @@ class AuteursController extends AbstractController
                 $message = 'Action impossible : ' . $e->getMessage();
                 $message_type = 'alert-danger';
             }
-            // Retour sur la page d'index (⚠️ code redondant)
-            return $this->render('auteurs/index.html.twig', [
-                'controller_name' => 'AuteursController',
-                'auteurs' => $auteurRepository->findBy([], ['auteur' => 'asc']),
+            // Retour sur la page d'index
+            return $this->redirectToRoute('app_auteurs', [
                 'message' => $message,
                 'message_type' => $message_type
             ]);
@@ -100,10 +95,8 @@ class AuteursController extends AbstractController
                 $message = 'Action impossible : ' . $e->getMessage();
                 $message_type = 'alert-danger';
             }
-            // Retour sur la page d'index (⚠️ code redondant)
-            return $this->render('auteurs/index.html.twig', [
-                'controller_name' => 'AuteursController',
-                'auteurs' => $auteurRepository->findBy([], ['auteur' => 'asc']),
+            // Retour sur la page d'index
+            return $this->redirectToRoute('app_auteurs', [
                 'message' => $message,
                 'message_type' => $message_type
             ]);
@@ -120,10 +113,8 @@ class AuteursController extends AbstractController
     {
         $auteur = $auteurRepository->find($id);
         if (!$auteur) {
-            // Retour sur la page d'index (⚠️ code redondant)
-            return $this->render('auteurs/index.html.twig', [
-                'controller_name' => 'AuteursController',
-                'auteurs' => $auteurRepository->findBy([]),
+            // Retour sur la page d'index
+            return $this->redirectToRoute('app_auteurs', [
                 'message' => 'Action impossible : Référence inexistante.',
                 'message_type' => 'alert-danger'
             ]);
@@ -132,10 +123,8 @@ class AuteursController extends AbstractController
         $auteur_name = $auteur->getAuteur();
         $auteurRepository->remove($auteur, true);
 
-        // Retour sur la page d'index (⚠️ code redondant)
-        return $this->render('auteurs/index.html.twig', [
-            'controller_name' => 'AuteursController',
-            'auteurs' => $auteurRepository->findBy([]),
+        // Retour sur la page d'index
+        return $this->redirectToRoute('app_auteurs', [
             'message' => $auteur_name . ' a été effacé',
             'message_type' => 'alert-success'
         ]);

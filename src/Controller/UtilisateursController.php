@@ -27,10 +27,8 @@ class UtilisateursController extends AbstractController
     {
         $utilisateur = $utilisateurRepository->find($id);
         if (!$utilisateur) {
-            // Retour sur la page d'index (⚠️ code redondant)
-            return $this->render('utilisateurs/index.html.twig', [
-                'controller_name' => 'utilisateursController',
-                'utilisateurs' => $utilisateurRepository->findBy([], ['mail' => 'asc']),
+            // Retour sur la page d'index
+            return $this->redirectToRoute('app_utilisateurs', [
                 'message' => 'Action impossible : Référence inexistante.',
                 'message_type' => 'alert-danger'
             ]);
@@ -49,10 +47,8 @@ class UtilisateursController extends AbstractController
                 $message = 'Action impossible : ' . $e->getMessage();
                 $message_type = 'alert-danger';
             }
-            // Retour sur la page d'index (⚠️ code redondant)
-            return $this->render('utilisateurs/index.html.twig', [
-                'controller_name' => 'utilisateursController',
-                'utilisateurs' => $utilisateurRepository->findBy([], ['mail' => 'asc']),
+            // Retour sur la page d'index
+            return $this->redirectToRoute('app_utilisateurs', [
                 'message' => $message,
                 'message_type' => $message_type
             ]);
@@ -70,10 +66,8 @@ class UtilisateursController extends AbstractController
     {
         $utilisateur = $utilisateurRepository->find($id);
         if (!$utilisateur) {
-            // Retour sur la page d'index (⚠️ code redondant)
-            return $this->render('utilisateurs/index.html.twig', [
-                'controller_name' => 'utilisateursController',
-                'utilisateurs' => $utilisateurRepository->findBy([], ['mail' => 'asc']),
+            // Retour sur la page d'index
+            return $this->redirectToRoute('app_utilisateurs', [
                 'message' => 'Action impossible : Référence inexistante.',
                 'message_type' => 'alert-danger'
             ]);
@@ -82,10 +76,8 @@ class UtilisateursController extends AbstractController
         $utilisateur_mail = $utilisateur->getMail();
         $utilisateurRepository->remove($utilisateur, true);
 
-        // Retour sur la page d'index (⚠️ code redondant)
-        return $this->render('utilisateurs/index.html.twig', [
-            'controller_name' => 'utilisateursController',
-            'utilisateurs' => $utilisateurRepository->findBy([], ['mail' => 'asc']),
+        // Retour sur la page d'index
+        return $this->redirectToRoute('app_utilisateurs', [
             'message' => $utilisateur_mail . ' a été effacé',
             'message_type' => 'alert-success'
         ]);
@@ -96,10 +88,8 @@ class UtilisateursController extends AbstractController
     {
         $utilisateur = $utilisateurRepository->find($id);
         if (!$utilisateur) {
-            // Retour sur la page d'index (⚠️ code redondant)
-            return $this->render('utilisateurs/index.html.twig', [
-                'controller_name' => 'utilisateursController',
-                'utilisateurs' => $utilisateurRepository->findBy([], ['mail' => 'asc']),
+            // Retour sur la page d'index
+            return $this->redirectToRoute('app_utilisateurs', [
                 'message' => 'Action impossible : Référence inexistante.',
                 'message_type' => 'alert-danger'
             ]);
@@ -109,10 +99,8 @@ class UtilisateursController extends AbstractController
         $utilisateur->setPassword(null);
         $utilisateurRepository->save($utilisateur, true);
 
-        // Retour sur la page d'index (⚠️ code redondant)
-        return $this->render('utilisateurs/index.html.twig', [
-            'controller_name' => 'utilisateursController',
-            'utilisateurs' => $utilisateurRepository->findBy([], ['mail' => 'asc']),
+        // Retour sur la page d'index
+        return $this->redirectToRoute('app_utilisateurs', [
             'message' => 'Le mot de passe associé à ' . $utilisateur_mail . ' a été réinitialisé.',
             'message_type' => 'alert-success'
         ]);

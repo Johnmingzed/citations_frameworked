@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Utilisateur;
 use App\Form\UtilisateurFormType;
 use App\Repository\UtilisateurRepository;
 use Exception;
@@ -11,30 +10,42 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Le contrôleur responsable de la gestion du profil de l'utilisateur.
+ */
 class ProfilController extends AbstractController
 {
-
+    /**
+     * Affiche le formulaire de modification du profil de l'utilisateur.
+     *
+     * @param UtilisateurRepository $utilisateurRepository Le référentiel pour accéder aux utilisateurs.
+     * @param Request               $request               La requête HTTP entrante.
+     * 
+     * @return Response La réponse HTTP contenant le formulaire de modification du profil ou la page d'index en cas d'erreur.
+     * 
+     */
     #[Route('/profil', name: 'app_profil')]
     public function index(UtilisateurRepository $utilisateurRepository,  Request $request): Response
     {
-
+        // Récupérer le profil de l'utilisateur actuellement connecté
         $profil = $this->getUser();
         $utilisateur = $utilisateurRepository->find($profil->getId());
 
         if (!$utilisateur) {
-            // Retour sur la page d'index (⚠️ code redondant)
-            return $this->render('main/index.html.twig', [
-                'controller_name' => 'MainController',
+            // Rediriger vers la page d'accueil avec un message d'erreur si le profil n'existe pas
+            return $this->redirectToRoute('app_main', [
                 'message' => 'Action impossible : Référence inexistante.',
                 'message_type' => 'alert-danger'
             ]);
         }
 
+        // Créer le formulaire de modification du profil
         $form = $this->createForm(UtilisateurFormType::class, $profil);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            // Le formulaire a été soumis et les données sont valides
             $message = 'Votre pofil a bien été modifié.';
             $message_type = 'alert-success';
 
@@ -44,14 +55,14 @@ class ProfilController extends AbstractController
                 $message = 'Action impossible : ' . $e->getMessage();
                 $message_type = 'alert-danger';
             }
-            // Retour sur la page d'index (⚠️ code redondant)
-            return $this->render('main/index.html.twig', [
-                'controller_name' => 'MainController',
+            // Rediriger vers la page d'accueil avec un message de succès ou d'erreur
+            return $this->redirectToRoute('app_main', [
                 'message' => $message,
                 'message_type' => $message_type
             ]);
         }
 
+        // Afficher le formulaire de modification du profil
         return $this->render('profil/modifier.html.twig', [
             'controller_name' => 'ProfilController',
             'utilisateur' => $utilisateur,
@@ -59,27 +70,38 @@ class ProfilController extends AbstractController
         ]);
     }
 
+    /**
+     * Affiche le formulaire de modification du mot de passe de l'utilisateur.
+     *
+     * @param UtilisateurRepository $utilisateurRepository Le référentiel pour accéder aux utilisateurs.
+     * @param Request               $request               La requête HTTP entrante.
+     * 
+     * @return Response La réponse HTTP contenant le formulaire de modification du mot de passe ou la page d'index en cas d'erreur.
+     * 
+     */
     #[Route('/profil/changepw', name: 'app_profil_change_pw')]
-    public function resetPW(utilisateurRepository $utilisateurRepository, Request $request): Response
+    public function resetPW(UtilisateurRepository $utilisateurRepository, Request $request): Response
     {
 
+        // Récupérer le profil de l'utilisateur actuellement connecté
         $profil = $this->getUser();
         $utilisateur = $utilisateurRepository->find($profil->getId());
 
         if (!$utilisateur) {
-            // Retour sur la page d'index (⚠️ code redondant)
-            return $this->render('main/index.html.twig', [
-                'controller_name' => 'MainController',
+            // Rediriger vers la page d'accueil avec un message d'erreur si le profil n'existe pas
+            return $this->redirectToRoute('app_main', [
                 'message' => 'Action impossible : Référence inexistante.',
                 'message_type' => 'alert-danger'
             ]);
         }
 
+        // Créer le formulaire de modification du mot de passe
         $form = $this->createForm(UtilisateurFormType::class, $profil);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            // Le formulaire a été soumis et les données sont valides
             $message = 'Votre pofil a bien été modifié.';
             $message_type = 'alert-success';
 
@@ -89,14 +111,14 @@ class ProfilController extends AbstractController
                 $message = 'Action impossible : ' . $e->getMessage();
                 $message_type = 'alert-danger';
             }
-            // Retour sur la page d'index (⚠️ code redondant)
-            return $this->render('main/index.html.twig', [
-                'controller_name' => 'MainController',
+            // Rediriger vers la page d'accueil avec un message de succès ou d'erreur
+            return $this->redirectToRoute('app_main', [
                 'message' => $message,
                 'message_type' => $message_type
             ]);
         }
 
+        // Afficher le formulaire de modification du mot de passe
         return $this->render('profil/modifier.html.twig', [
             'controller_name' => 'ProfilController',
             'utilisateur' => $utilisateur,

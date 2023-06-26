@@ -40,10 +40,8 @@ class CitationsController extends AbstractController
     public function detail(citationRepository $citationRepository, int $id): Response
     {
         if (!$citationRepository->find($id)) {
-            // Retour sur la page d'index (⚠️ code redondant)
-            return $this->render('citations/index.html.twig', [
-                'controller_name' => 'CitationsController',
-                'citations' => $this->citations,
+            // Retour sur la page d'index
+            return $this->redirectToRoute('app_citations', [
                 'message' => 'Action impossible : Référence inexistante.',
                 'message_type' => 'alert-danger'
             ]);
@@ -60,11 +58,8 @@ class CitationsController extends AbstractController
         $citation = $citationRepository->find($id);
         $auteurs = $auteurRepository->findBy([], ['auteur' => 'ASC']);
         if (!$citation) {
-            // Retour sur la page d'index (⚠️ code redondant)
-            return $this->render('citations/index.html.twig', [
-                'controller_name' => 'CitationsController',
-                'auteurs' => $auteurs,
-                'citations' => $this->citations,
+            // Retour sur la page d'index
+            return $this->redirectToRoute('app_citations', [
                 'message' => 'Action impossible : Référence inexistante.',
                 'message_type' => 'alert-danger'
             ]);
@@ -83,11 +78,8 @@ class CitationsController extends AbstractController
                 $message = 'Action impossible : ' . $e->getMessage();
                 $message_type = 'alert-danger';
             }
-            // Retour sur la page d'index (⚠️ code redondant)
-            return $this->render('citations/index.html.twig', [
-                'controller_name' => 'CitationsController',
-                'auteurs' => $auteurs,
-                'citations' => $this->citations,
+            // Retour sur la page d'index
+            return $this->redirectToRoute('app_citations', [
                 'message' => $message,
                 'message_type' => $message_type
             ]);
@@ -119,11 +111,8 @@ class CitationsController extends AbstractController
                 $message = 'Action impossible : ' . $e->getMessage();
                 $message_type = 'alert-danger';
             }
-            // Retour sur la page d'index (⚠️ code redondant)
-            return $this->render('citations/index.html.twig', [
-                'controller_name' => 'CitationsController',
-                'auteurs' => $auteurs,
-                'citations' => $this->citations,
+            // Retour sur la page d'index
+            return $this->redirectToRoute('app_citations', [
                 'message' => $message,
                 'message_type' => $message_type
             ]);
@@ -140,10 +129,8 @@ class CitationsController extends AbstractController
     {
         $citation = $citationRepository->find($id);
         if (!$citation) {
-            // Retour sur la page d'index (⚠️ code redondant)
-            return $this->render('citations/index.html.twig', [
-                'controller_name' => 'CitationsController',
-                'citations' => $citationRepository->findBy([]),
+            // Retour sur la page d'index
+            return $this->redirectToRoute('app_citations', [
                 'message' => 'Action impossible : Référence inexistante.',
                 'message_type' => 'alert-danger'
             ]);
@@ -151,11 +138,8 @@ class CitationsController extends AbstractController
 
         $citationRepository->remove($citation, true);
 
-        // Retour sur la page d'index (⚠️ code redondant)
-        return $this->render('citations/index.html.twig', [
-            'controller_name' => 'citationsController',
-            'auteurs' => $auteurRepository->findBy([]),
-            'citations' => $this->citations,
+        // Retour sur la page d'index
+        return $this->redirectToRoute('app_citations', [
             'message' => 'La citation a été effacé',
             'message_type' => 'alert-success'
         ]);
