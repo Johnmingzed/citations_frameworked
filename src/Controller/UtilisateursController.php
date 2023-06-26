@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Utilisateur;
-// use App\Form\UtilisateurFormType;
+use App\Form\UtilisateurFormType;
 use App\Repository\UtilisateurRepository;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,37 +22,20 @@ class UtilisateursController extends AbstractController
         ]);
     }
 
-/*     #[Route('/utilisateur/details/{id}', name: 'app_utilisateurs_detail')]
-    public function detail(utilisateurRepository $utilisateurRepository, int $id): Response
-    {
-        if (!$utilisateurRepository->find($id)) {
-            return $this->render('utilisateurs/index.html.twig', [
-                'controller_name' => 'utilisateursController',
-                'utilisateurs' => $utilisateurRepository->findBy([]),
-                'message' => 'Action impossible : Référence inexistante.',
-                'message_type' => 'alert-danger'
-            ]);
-        }
-        return $this->render('utilisateurs/detail.html.twig', [
-            'controller_name' => 'utilisateursController',
-            'utilisateur' => $utilisateurRepository->find($id)
-        ]);
-    } */
-
-/*     #[Route('/utilisateur/modifier/{id}', name: 'app_utilisateurs_modifier')]
-    public function modification(utilisateurRepository $utilisateurRepository, int $id, Request $request): Response
+    #[Route('/utilisateur/modifier/{id}', name: 'app_utilisateurs_modifier')]
+    public function modification(UtilisateurRepository $utilisateurRepository, int $id, Request $request): Response
     {
         $utilisateur = $utilisateurRepository->find($id);
         if (!$utilisateur) {
             // Retour sur la page d'index (⚠️ code redondant)
             return $this->render('utilisateurs/index.html.twig', [
                 'controller_name' => 'utilisateursController',
-                'utilisateurs' => $utilisateurRepository->findBy([], ['utilisateur' => 'asc']),
+                'utilisateurs' => $utilisateurRepository->findBy([], ['mail' => 'asc']),
                 'message' => 'Action impossible : Référence inexistante.',
                 'message_type' => 'alert-danger'
             ]);
         }
-        $form = $this->createForm(utilisateurFormType::class, $utilisateur);
+        $form = $this->createForm(UtilisateurFormType::class, $utilisateur);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -69,7 +52,7 @@ class UtilisateursController extends AbstractController
             // Retour sur la page d'index (⚠️ code redondant)
             return $this->render('utilisateurs/index.html.twig', [
                 'controller_name' => 'utilisateursController',
-                'utilisateurs' => $utilisateurRepository->findBy([], ['utilisateur' => 'asc']),
+                'utilisateurs' => $utilisateurRepository->findBy([], ['mail' => 'asc']),
                 'message' => $message,
                 'message_type' => $message_type
             ]);
@@ -80,42 +63,9 @@ class UtilisateursController extends AbstractController
             'utilisateur' => $utilisateur,
             'utilisateurForm' => $form->createView()
         ]);
-    } */
+    }
 
- /*    #[Route('/utilisateur/ajouter/', name: 'app_utilisateurs_ajouter')]
-    public function ajouter(utilisateurRepository $utilisateurRepository, Request $request): Response
-    {
-        $utilisateur = new utilisateur();
-        $form = $this->createForm(utilisateurFormType::class, $utilisateur);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $message = 'Nouvel utilisateur créé avec succès.';
-            $message_type = 'alert-success';
-
-            try {
-                $utilisateurRepository->save($utilisateur, true);
-            } catch (Exception $e) {
-                $message = 'Action impossible : ' . $e->getMessage();
-                $message_type = 'alert-danger';
-            }
-            // Retour sur la page d'index (⚠️ code redondant)
-            return $this->render('utilisateurs/index.html.twig', [
-                'controller_name' => 'utilisateursController',
-                'utilisateurs' => $utilisateurRepository->findBy([], ['utilisateur' => 'asc']),
-                'message' => $message,
-                'message_type' => $message_type
-            ]);
-        }
-
-        return $this->render('utilisateurs/ajouter.html.twig', [
-            'controller_name' => 'utilisateursController',
-            'utilisateurForm' => $form->createView()
-        ]);
-    } */
-
-/*     #[Route('/utilisateur/supprimer/{id}', name: 'app_utilisateurs_supprimer')]
+    #[Route('/utilisateur/supprimer/{id}', name: 'app_utilisateurs_supprimer')]
     public function suppression(utilisateurRepository $utilisateurRepository, int $id): Response
     {
         $utilisateur = $utilisateurRepository->find($id);
@@ -123,21 +73,48 @@ class UtilisateursController extends AbstractController
             // Retour sur la page d'index (⚠️ code redondant)
             return $this->render('utilisateurs/index.html.twig', [
                 'controller_name' => 'utilisateursController',
-                'utilisateurs' => $utilisateurRepository->findBy([]),
+                'utilisateurs' => $utilisateurRepository->findBy([], ['mail' => 'asc']),
                 'message' => 'Action impossible : Référence inexistante.',
                 'message_type' => 'alert-danger'
             ]);
         }
 
-        $utilisateur_name = $utilisateur->getutilisateur();
+        $utilisateur_mail = $utilisateur->getMail();
         $utilisateurRepository->remove($utilisateur, true);
 
         // Retour sur la page d'index (⚠️ code redondant)
         return $this->render('utilisateurs/index.html.twig', [
             'controller_name' => 'utilisateursController',
-            'utilisateurs' => $utilisateurRepository->findBy([]),
-            'message' => $utilisateur_name . ' a été effacé',
+            'utilisateurs' => $utilisateurRepository->findBy([], ['mail' => 'asc']),
+            'message' => $utilisateur_mail . ' a été effacé',
             'message_type' => 'alert-success'
         ]);
-    } */
+    }
+
+    #[Route('/utilisateur/resetpw/{id}', name: 'app_utilisateurs_reset_pw')]
+    public function resetPW(utilisateurRepository $utilisateurRepository, int $id): Response
+    {
+        $utilisateur = $utilisateurRepository->find($id);
+        if (!$utilisateur) {
+            // Retour sur la page d'index (⚠️ code redondant)
+            return $this->render('utilisateurs/index.html.twig', [
+                'controller_name' => 'utilisateursController',
+                'utilisateurs' => $utilisateurRepository->findBy([], ['mail' => 'asc']),
+                'message' => 'Action impossible : Référence inexistante.',
+                'message_type' => 'alert-danger'
+            ]);
+        }
+
+        $utilisateur_mail = $utilisateur->getMail();
+        $utilisateur->setPassword(null);
+        $utilisateurRepository->save($utilisateur, true);
+
+        // Retour sur la page d'index (⚠️ code redondant)
+        return $this->render('utilisateurs/index.html.twig', [
+            'controller_name' => 'utilisateursController',
+            'utilisateurs' => $utilisateurRepository->findBy([], ['mail' => 'asc']),
+            'message' => 'Le mot de passe associé à ' . $utilisateur_mail . ' a été réinitialisé.',
+            'message_type' => 'alert-success'
+        ]);
+    }
 }

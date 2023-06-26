@@ -9,15 +9,17 @@
         {{ form_errors(registrationForm) }}
 
         {{ form_start(registrationForm) }}
-        <h1 class="h3 mb-3 font-weight-normal">Créer un compte</h1>
+        <h1 class="h3 mb-3 font-weight-normal">Créer un compte utilisateur</h1>
         {{ form_row(registrationForm.mail) }}
-        {{ form_row(registrationForm.plainPassword) }}
+        {# {{ form_row(registrationForm.plainPassword) }} #}
         <div class="form-check mt-3">
             {{ form_widget(registrationForm.agreeTerms) }}
             {{ form_label(registrationForm.agreeTerms) }}
         </div>
-
-        <button type="submit" class="btn btn-lg btn-primary mt-3">Créer le compte</button>
+        <div class="d-flex justify-content-between">
+            <a class="btn btn-lg btn-outline-danger mt-3" href="{{ path('app_utilisateurs') }}">Annuler</a>
+            <button type="submit" class="btn btn-lg btn-outline-success mt-3">Créer le compte</button>
+        </div>
         {{ form_end(registrationForm) }}
 
     </div>

@@ -38,8 +38,8 @@ class RegistrationFormType extends AbstractType
                         'message' => 'Vous devez accepter les conditions d\'utilisation pour vous inscrire.',
                     ]),
                 ],
-            ])
-            ->add('plainPassword', PasswordType::class, [
+            ]);
+/*             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false,
@@ -59,7 +59,7 @@ class RegistrationFormType extends AbstractType
                         'max' => 4096,
                     ]),
                 ],
-            ]);
+            ]); */
     }
 
     public function configureOptions(OptionsResolver $resolver): void
