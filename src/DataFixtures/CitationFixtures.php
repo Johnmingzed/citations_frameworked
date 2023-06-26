@@ -15,7 +15,7 @@ class CitationFixtures extends Fixture implements DependentFixtureInterface
 
         for ($cit = 1; $cit <= 50; $cit++) {
             $citation = new Citation();
-            $citation->setCitation($faker->text);
+            $citation->setCitation($faker->realText);
 
             // On va chercher une référence à un auteur
             $auteur = $this->getReference('auteur-' . rand(1, 10));

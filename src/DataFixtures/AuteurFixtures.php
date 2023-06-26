@@ -17,7 +17,7 @@ class AuteurFixtures extends Fixture
         for ($aut = 1; $aut <= 10; $aut++) {
             $auteur = new Auteur();
             $auteur->setAuteur($faker->name);
-            $auteur->setBio($faker->text);
+            $auteur->setBio($faker->realText);
             $manager->persist($auteur);
 
             $this->addReference('auteur-' . $this->counter, $auteur);

@@ -30,7 +30,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      */
-    #[ORM\Column(name: 'mot_de_passe')]
+    #[ORM\Column(name: 'mot_de_passe', nullable: true)]
     private ?string $password = null;
 
     #[ORM\Column(length: 31, nullable: true)]
@@ -99,7 +99,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see PasswordAuthenticatedUserInterface
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
