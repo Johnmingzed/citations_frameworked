@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AuteurRepository::class)]
 #[ORM\Table(name: 'auteurs')]
@@ -21,17 +22,20 @@ class Auteur
     private ?int $id = null;
 
     #[ORM\Column(length: 63, unique: true)]
+    #[Groups(["getAuteur", "getCitation"])]
     private ?string $auteur = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(["getAuteur", "getCitation"])]
     private ?string $bio = null;
 
     #[ORM\OneToMany(mappedBy: 'auteur_id', targetEntity: Citation::class)]
+    #[Groups(["getAuteur"])]
     private Collection $citations;
 
     public function __construct()
     {
-        $this->citations = new ArrayCollection();
+        // $this->citations = new ArrayCollection();
         $this->date_modif = new \DateTime();
     }
 

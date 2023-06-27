@@ -3,10 +3,10 @@
 namespace App\Entity;
 
 use App\Entity\Trait\DateModifTrait;
-use App\Repository\AuteurRepository;
 use App\Repository\CitationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CitationRepository::class)]
 #[ORM\Table(name: 'citations')]
@@ -17,16 +17,20 @@ class Citation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["getCitation", "getAuteur"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 511)]
+    #[Groups(["getCitation", "getAuteur"])]
     private ?string $citation = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(["getCitation", "getAuteur"])]
     private ?string $explication = null;
 
     #[ORM\ManyToOne(inversedBy: 'citations')]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[Groups(["getCitation"])]
     private ?Auteur $auteur_id = null;
 
     public function __construct()
