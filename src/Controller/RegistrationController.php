@@ -37,12 +37,8 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
             // do anything else you need here, like send an email
-            return $this->render('utilisateurs/index.html.twig', [
-                'controller_name' => 'utilisateursController',
-                'utilisateurs' => $utilisateurRepository->findBy([], ['mail' => 'asc']),
-                'message' => 'Le nouvel utilisateur' . $user->getMail() . ' a bien été créé.',
-                'message_type' => 'alert-success'
-            ]);
+            $this->addFlash('success', 'Le nouvel utilisateur' . $user->getMail() . ' a bien été créé.');
+            return $this->redirectToRoute('app_utilisateurs');
             // Autolog du nouvel utilisateur
             // return $userAuthenticator->authenticateUser(
             //     $user,

@@ -28,10 +28,8 @@ class UtilisateursController extends AbstractController
         $utilisateur = $utilisateurRepository->find($id);
         if (!$utilisateur) {
             // Retour sur la page d'index
-            return $this->redirectToRoute('app_utilisateurs', [
-                'message' => 'Action impossible : Référence inexistante.',
-                'message_type' => 'alert-danger'
-            ]);
+            $this->addFlash('danger', 'Action impossible : Référence inexistante.');
+            return $this->redirectToRoute('app_utilisateurs');
         }
         $form = $this->createForm(UtilisateurFormType::class, $utilisateur);
         $form->handleRequest($request);
@@ -39,19 +37,17 @@ class UtilisateursController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $message = 'Utilisateur modifié avec succès.';
-            $message_type = 'alert-success';
+            $message_type = 'success';
 
             try {
                 $utilisateurRepository->save($utilisateur, true);
             } catch (Exception $e) {
                 $message = 'Action impossible : ' . $e->getMessage();
-                $message_type = 'alert-danger';
+                $message_type = 'danger';
             }
             // Retour sur la page d'index
-            return $this->redirectToRoute('app_utilisateurs', [
-                'message' => $message,
-                'message_type' => $message_type
-            ]);
+            $this->addFlash($message_type, $message);
+            return $this->redirectToRoute('app_utilisateurs');
         }
 
         return $this->render('utilisateurs/modifier.html.twig', [
@@ -67,20 +63,16 @@ class UtilisateursController extends AbstractController
         $utilisateur = $utilisateurRepository->find($id);
         if (!$utilisateur) {
             // Retour sur la page d'index
-            return $this->redirectToRoute('app_utilisateurs', [
-                'message' => 'Action impossible : Référence inexistante.',
-                'message_type' => 'alert-danger'
-            ]);
+            $this->addFlash('danger', 'Action impossible : Référence inexistante.');
+            return $this->redirectToRoute('app_utilisateurs');
         }
 
         $utilisateur_mail = $utilisateur->getMail();
         $utilisateurRepository->remove($utilisateur, true);
 
         // Retour sur la page d'index
-        return $this->redirectToRoute('app_utilisateurs', [
-            'message' => $utilisateur_mail . ' a été effacé',
-            'message_type' => 'alert-success'
-        ]);
+        $this->addFlash('success', $utilisateur_mail . ' a été effacé');
+        return $this->redirectToRoute('app_utilisateurs');
     }
 
     #[Route('/utilisateur/resetpw/{id}', name: 'app_utilisateurs_reset_pw')]
@@ -89,10 +81,8 @@ class UtilisateursController extends AbstractController
         $utilisateur = $utilisateurRepository->find($id);
         if (!$utilisateur) {
             // Retour sur la page d'index
-            return $this->redirectToRoute('app_utilisateurs', [
-                'message' => 'Action impossible : Référence inexistante.',
-                'message_type' => 'alert-danger'
-            ]);
+            $this->addFlash('danger', 'Action impossible : Référence inexistante.');
+            return $this->redirectToRoute('app_utilisateurs');
         }
 
         $utilisateur_mail = $utilisateur->getMail();
@@ -100,9 +90,7 @@ class UtilisateursController extends AbstractController
         $utilisateurRepository->save($utilisateur, true);
 
         // Retour sur la page d'index
-        return $this->redirectToRoute('app_utilisateurs', [
-            'message' => 'Le mot de passe associé à ' . $utilisateur_mail . ' a été réinitialisé.',
-            'message_type' => 'alert-success'
-        ]);
+        $this->addFlash('success', 'Le mot de passe associé à ' . $utilisateur_mail . ' a été réinitialisé.');
+        return $this->redirectToRoute('app_utilisateurs');
     }
 }

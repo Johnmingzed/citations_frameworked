@@ -20,10 +20,10 @@ class CitationsController extends AbstractController
     public function __construct(CitationRepository $citationRepository)
     {
         return $this->citations = $citationRepository->createQueryBuilder('c')
-        ->leftJoin('c.auteur_id', 'a')
-        ->orderBy('a.auteur', 'ASC')
-        ->getQuery()
-        ->getResult();
+            ->leftJoin('c.auteur_id', 'a')
+            ->orderBy('a.auteur', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 
     #[Route('/citations', name: 'app_citations')]
@@ -41,10 +41,8 @@ class CitationsController extends AbstractController
     {
         if (!$citationRepository->find($id)) {
             // Retour sur la page d'index
-            return $this->redirectToRoute('app_citations', [
-                'message' => 'Action impossible : Référence inexistante.',
-                'message_type' => 'alert-danger'
-            ]);
+            $this->addFlash('danger', 'Action impossible : Référence inexistante.');
+            return $this->redirectToRoute('app_citations');
         }
         return $this->render('citations/detail.html.twig', [
             'controller_name' => 'CitationsController',
@@ -59,10 +57,8 @@ class CitationsController extends AbstractController
         $auteurs = $auteurRepository->findBy([], ['auteur' => 'ASC']);
         if (!$citation) {
             // Retour sur la page d'index
-            return $this->redirectToRoute('app_citations', [
-                'message' => 'Action impossible : Référence inexistante.',
-                'message_type' => 'alert-danger'
-            ]);
+            $this->addFlash('danger', 'Action impossible : Référence inexistante.');
+            return $this->redirectToRoute('app_citations');
         }
         $form = $this->createForm(CitationFormType::class, $citation, ['auteur' => $auteurs]);
         $form->handleRequest($request);
@@ -70,19 +66,17 @@ class CitationsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $message = 'Citation modifiée avec succès.';
-            $message_type = 'alert-success';
+            $message_type = 'success';
 
             try {
                 $citationRepository->save($citation, true);
             } catch (Exception $e) {
                 $message = 'Action impossible : ' . $e->getMessage();
-                $message_type = 'alert-danger';
+                $message_type = 'danger';
             }
             // Retour sur la page d'index
-            return $this->redirectToRoute('app_citations', [
-                'message' => $message,
-                'message_type' => $message_type
-            ]);
+            $this->addFlash($message_type, $message);
+            return $this->redirectToRoute('app_citations');
         }
 
         return $this->render('citations/modifier.html.twig', [
@@ -103,19 +97,17 @@ class CitationsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $message = 'Nouvelle citation créée avec succès.';
-            $message_type = 'alert-success';
+            $message_type = 'success';
 
             try {
                 $citationRepository->save($citation, true);
             } catch (Exception $e) {
                 $message = 'Action impossible : ' . $e->getMessage();
-                $message_type = 'alert-danger';
+                $message_type = 'danger';
             }
             // Retour sur la page d'index
-            return $this->redirectToRoute('app_citations', [
-                'message' => $message,
-                'message_type' => $message_type
-            ]);
+            $this->addFlash($message_type, $message);
+            return $this->redirectToRoute('app_citations');
         }
 
         return $this->render('citations/ajouter.html.twig', [
@@ -130,18 +122,14 @@ class CitationsController extends AbstractController
         $citation = $citationRepository->find($id);
         if (!$citation) {
             // Retour sur la page d'index
-            return $this->redirectToRoute('app_citations', [
-                'message' => 'Action impossible : Référence inexistante.',
-                'message_type' => 'alert-danger'
-            ]);
+            $this->addFlash('danger', 'Action impossible : Référence inexistante.');
+            return $this->redirectToRoute('app_citations');
         }
 
         $citationRepository->remove($citation, true);
 
         // Retour sur la page d'index
-        return $this->redirectToRoute('app_citations', [
-            'message' => 'La citation a été effacé',
-            'message_type' => 'alert-success'
-        ]);
+        $this->addFlash('success', 'La citation a été effacée.');
+        return $this->redirectToRoute('app_citations');
     }
 }

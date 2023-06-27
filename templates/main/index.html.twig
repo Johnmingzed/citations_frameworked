@@ -4,6 +4,11 @@
 
 {% block main %}
 
+{# Debug #}
+{% if saved is defined %}
+{{ dump(saved) }}
+{% endif %}
+
 <div class="example-wrapper">
     <h1>Hello {{ controller_name }}! ✅</h1>
 

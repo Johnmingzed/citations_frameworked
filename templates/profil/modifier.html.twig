@@ -19,7 +19,6 @@
         {% else %}
         {% do utilisateurForm.password.setRendered() %}
         {% endif %}
-        {% do utilisateurForm.admin.setRendered() %}
         <div class="d-flex justify-content-between gap-3">
             <a class="btn btn-lg btn-outline-danger mt-3" href="{{ path('app_main') }}">Annuler</a>
             {% if utilisateur.password is not null %}

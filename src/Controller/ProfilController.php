@@ -25,7 +25,7 @@ class ProfilController extends AbstractController
      * 
      */
     #[Route('/profil', name: 'app_profil')]
-    public function index(UtilisateurRepository $utilisateurRepository,  Request $request): Response
+    public function udpate(UtilisateurRepository $utilisateurRepository,  Request $request): Response
     {
         // Récupérer le profil de l'utilisateur actuellement connecté
         $profil = $this->getUser();
@@ -33,32 +33,31 @@ class ProfilController extends AbstractController
 
         if (!$utilisateur) {
             // Rediriger vers la page d'accueil avec un message d'erreur si le profil n'existe pas
-            return $this->redirectToRoute('app_main', [
-                'message' => 'Action impossible : Référence inexistante.',
-                'message_type' => 'alert-danger'
-            ]);
+            $this->addFlash('danger', 'Action impossible : Référence inexistante.');
+            return $this->redirectToRoute('app_main');
         }
 
         // Créer le formulaire de modification du profil
         $form = $this->createForm(UtilisateurFormType::class, $profil);
+        $form->remove('admin');
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
             // Le formulaire a été soumis et les données sont valides
             $message = 'Votre pofil a bien été modifié.';
-            $message_type = 'alert-success';
+            $message_type = 'success';
 
             try {
                 $utilisateurRepository->save($utilisateur, true);
             } catch (Exception $e) {
                 $message = 'Action impossible : ' . $e->getMessage();
-                $message_type = 'alert-danger';
+                $message_type = 'danger';
             }
             // Rediriger vers la page d'accueil avec un message de succès ou d'erreur
+            $this->addFlash($message_type, $message);
             return $this->redirectToRoute('app_main', [
-                'message' => $message,
-                'message_type' => $message_type
+                'saved' => $utilisateur
             ]);
         }
 
@@ -89,33 +88,30 @@ class ProfilController extends AbstractController
 
         if (!$utilisateur) {
             // Rediriger vers la page d'accueil avec un message d'erreur si le profil n'existe pas
-            return $this->redirectToRoute('app_main', [
-                'message' => 'Action impossible : Référence inexistante.',
-                'message_type' => 'alert-danger'
-            ]);
+            $this->addFlash('danger', 'Action impossible : Référence inexistante.');
+            return $this->redirectToRoute('app_main');
         }
 
         // Créer le formulaire de modification du mot de passe
         $form = $this->createForm(UtilisateurFormType::class, $profil);
+        $form->remove('admin');
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
             // Le formulaire a été soumis et les données sont valides
             $message = 'Votre pofil a bien été modifié.';
-            $message_type = 'alert-success';
+            $message_type = 'success';
 
             try {
                 $utilisateurRepository->save($utilisateur, true);
             } catch (Exception $e) {
                 $message = 'Action impossible : ' . $e->getMessage();
-                $message_type = 'alert-danger';
+                $message_type = 'danger';
             }
             // Rediriger vers la page d'accueil avec un message de succès ou d'erreur
-            return $this->redirectToRoute('app_main', [
-                'message' => $message,
-                'message_type' => $message_type
-            ]);
+            $this->addFlash($message_type, $message);
+            return $this->redirectToRoute('app_main');
         }
 
         // Afficher le formulaire de modification du mot de passe

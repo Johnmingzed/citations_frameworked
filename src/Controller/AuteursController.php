@@ -27,10 +27,8 @@ class AuteursController extends AbstractController
     {
         if (!$auteurRepository->find($id)) {
             // Retour sur la page d'index
-            return $this->redirectToRoute('app_auteurs', [
-                'message' => 'Action impossible : Référence inexistante.',
-                'message_type' => 'alert-danger'
-            ]);
+            $this->addFlash('danger', 'Action impossible : Référence inexistante.');
+            return $this->redirectToRoute('app_auteurs');
         }
         return $this->render('auteurs/detail.html.twig', [
             'controller_name' => 'AuteursController',
@@ -44,10 +42,8 @@ class AuteursController extends AbstractController
         $auteur = $auteurRepository->find($id);
         if (!$auteur) {
             // Retour sur la page d'index
-            return $this->redirectToRoute('app_auteurs', [
-                'message' => 'Action impossible : Référence inexistante.',
-                'message_type' => 'alert-danger'
-            ]);
+            $this->addFlash('danger', 'Action impossible : Référence inexistante.');
+            return $this->redirectToRoute('app_auteurs');
         }
         $form = $this->createForm(AuteurFormType::class, $auteur);
         $form->handleRequest($request);
@@ -55,15 +51,16 @@ class AuteursController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $message = 'Auteur modifié avec succès.';
-            $message_type = 'alert-success';
+            $message_type = 'success';
 
             try {
                 $auteurRepository->save($auteur, true);
             } catch (Exception $e) {
                 $message = 'Action impossible : ' . $e->getMessage();
-                $message_type = 'alert-danger';
+                $message_type = 'danger';
             }
             // Retour sur la page d'index
+            $this->addFlash($message_type, $message);
             return $this->redirectToRoute('app_auteurs', [
                 'message' => $message,
                 'message_type' => $message_type
@@ -87,15 +84,16 @@ class AuteursController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $message = 'Nouvel auteur créé avec succès.';
-            $message_type = 'alert-success';
+            $message_type = 'success';
 
             try {
                 $auteurRepository->save($auteur, true);
             } catch (Exception $e) {
                 $message = 'Action impossible : ' . $e->getMessage();
-                $message_type = 'alert-danger';
+                $message_type = 'danger';
             }
             // Retour sur la page d'index
+            $this->addFlash($message_type, $message);
             return $this->redirectToRoute('app_auteurs', [
                 'message' => $message,
                 'message_type' => $message_type
@@ -114,19 +112,15 @@ class AuteursController extends AbstractController
         $auteur = $auteurRepository->find($id);
         if (!$auteur) {
             // Retour sur la page d'index
-            return $this->redirectToRoute('app_auteurs', [
-                'message' => 'Action impossible : Référence inexistante.',
-                'message_type' => 'alert-danger'
-            ]);
+            $this->addFlash('danger', 'Action impossible : Référence inexistante.');
+            return $this->redirectToRoute('app_auteurs');
         }
 
         $auteur_name = $auteur->getAuteur();
         $auteurRepository->remove($auteur, true);
 
         // Retour sur la page d'index
-        return $this->redirectToRoute('app_auteurs', [
-            'message' => $auteur_name . ' a été effacé',
-            'message_type' => 'alert-success'
-        ]);
+        $this->addFlash('success', $auteur_name . ' a été effacé.');
+        return $this->redirectToRoute('app_auteurs');
     }
 }
