@@ -163,6 +163,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setAdmin(bool $admin): static
     {
+        if($admin == true){
+            $roles[] = 'ROLE_ADMIN';
+        }else{
+            $roles[] = 'ROLE_USER';
+        }
+        $this->setRoles($roles);
         $this->admin = $admin;
 
         return $this;

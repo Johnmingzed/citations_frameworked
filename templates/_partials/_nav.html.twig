@@ -7,6 +7,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                {% if is_granted('ROLE_USER') %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
@@ -20,6 +21,12 @@
                         <li><a class="dropdown-item" href="{{ path('app_auteurs_ajouter') }}">Ajouter</a></li>
                     </ul>
                 </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_auteurs') }}">Les auteurs</a>
+                </li>
+                {% endif %}
+                {% if is_granted('ROLE_USER') %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
@@ -33,6 +40,12 @@
                         <li><a class="dropdown-item" href="{{ path('app_citations_ajouter') }}">Ajouter</a></li>
                     </ul>
                 </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_citations') }}">Les citations</a>
+                </li>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
@@ -46,6 +59,7 @@
                         <li><a class="dropdown-item" href="{{ path('app_register') }}">Créer</a></li>
                     </ul>
                 </li>
+                {% endif %}
             </ul>
             <div class="d-flex">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">

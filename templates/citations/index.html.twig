@@ -6,10 +6,12 @@
 
 <div class="d-flex align-items-center justify-content-between">
     <h1 class="h3">Liste des citations</h1>
+    {% if is_granted('ROLE_USER') %}
     <div>
         <a class="btn btn-outline-success m-1" href="{{ path('app_citations_ajouter') }}" role="button">Ajouter une
             citation</a>
     </div>
+    {% endif %}
 </div>
 
 <table class="table table-striped table-hover">
@@ -35,10 +37,15 @@
                 {% endif %}
             </td>
             <td class="align-middle">
+                {% if is_granted('ROLE_USER') %}
                 <a class="btn btn-outline-primary m-1" href="{{ path('app_citations_detail', {id: citation.id}) }}"
                     role="button">Afficher/Modifier</a>
                 <a class="btn btn-outline-danger m-1" href="{{ path('app_citations_supprimer', {id: citation.id}) }}"
                     role="button">Supprimer</a>
+                {% else %}
+                <a class="btn btn-outline-primary m-1" href="{{ path('app_citations_detail', {id: citation.id}) }}"
+                    role="button">Afficher</a>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}
