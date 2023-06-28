@@ -7,14 +7,28 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+/**
+ * Création de 6 comptes utilisateurs (dont 1 compte admin) en base de données
+ */
 class UtilisateurFixtures extends Fixture
 {
+    /**
+     * Constructeur de la classe UtilisateurFixtures.
+     *
+     * @param UserPasswordHasherInterface $passwordEncoder Service de hachage des mots de passe des utilisateurs.
+     */
     public function __construct(private UserPasswordHasherInterface $passwordEncoder)
     {
     }
 
+    /**
+     * Charge les données des fixtures.
+     *
+     * @param ObjectManager $manager Gestionnaire d'entités Doctrine.
+     */
     public function load(ObjectManager $manager): void
     {
+        // Création d'un administrateur
         $admin = new Utilisateur();
         $admin->setMail('jonathan.pchs@gmail.com');
         $admin->setPrenom('Jonathan');
@@ -26,6 +40,7 @@ class UtilisateurFixtures extends Fixture
 
         $manager->persist($admin);
 
+        // Création d'un utilisateur non administrateur
         $notadmin = new Utilisateur();
         $notadmin->setMail('notanadmin@gmail.com');
         $notadmin->setPrenom('John');
@@ -39,6 +54,7 @@ class UtilisateurFixtures extends Fixture
 
         $faker = \Faker\Factory::create('fr_FR');
 
+        // Création de 4 utilisateurs factices
         for ($usr = 1; $usr <= 4; $usr++) {
             $user = new Utilisateur();
             $user->setMail($faker->email);
@@ -50,6 +66,8 @@ class UtilisateurFixtures extends Fixture
 
             $manager->persist($user);
         }
+
+        // Enregistrement des entités en base de données
         $manager->flush();
     }
 }
