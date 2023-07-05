@@ -1,15 +1,23 @@
 <?php
 
+/**
+ * Nom du fichier : Auteurs.php
+ * Description : Ce fichier contient la classe Auteur qui représente une entité auteur.
+ */
+
 namespace App\Entity;
 
 use App\Entity\Trait\DateModifTrait;
 use App\Repository\AuteurRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+/**
+ * Class Auteur
+ * Cette classe représente un auteur.
+ */
 #[ORM\Entity(repositoryClass: AuteurRepository::class)]
 #[ORM\Table(name: 'auteurs')]
 class Auteur
@@ -35,20 +43,35 @@ class Auteur
 
     public function __construct()
     {
-        // $this->citations = new ArrayCollection();
         $this->date_modif = new \DateTime();
     }
 
+    /**
+     * Obtient l'identifiant de l'auteur.
+     *
+     * @return int|null L'identifiant de l'auteur
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * Obtient le nom de l'auteur.
+     *
+     * @return string|null Le nom de l'auteur
+     */
     public function getAuteur(): ?string
     {
         return html_entity_decode($this->auteur);
     }
 
+    /**
+     * Définit le nom de l'auteur.
+     *
+     * @param string $auteur Le nom de l'auteur
+     * @return static L'instance de l'auteur
+     */
     public function setAuteur(string $auteur): static
     {
         $this->auteur = $auteur;
@@ -56,11 +79,22 @@ class Auteur
         return $this;
     }
 
+    /**
+     * Obtient la biographie de l'auteur.
+     *
+     * @return string|null La biographie de l'auteur
+     */
     public function getBio(): ?string
     {
         return html_entity_decode($this->bio);
     }
 
+    /**
+     * Définit la biographie de l'auteur.
+     *
+     * @param string|null $bio La biographie de l'auteur
+     * @return static L'instance de l'auteur
+     */
     public function setBio(?string $bio): static
     {
         $this->bio = $bio;
@@ -69,13 +103,21 @@ class Auteur
     }
 
     /**
-     * @return Collection<int, Citation>
+     * Obtient la collection de citations associées à l'auteur.
+     *
+     * @return Collection<int, Citation> La collection de citations
      */
     public function getCitations(): Collection
     {
         return $this->citations;
     }
 
+    /**
+     * Ajoute une citation à l'auteur.
+     *
+     * @param Citation $citation La citation à ajouter
+     * @return static L'instance de l'auteur
+     */
     public function addCitation(Citation $citation): static
     {
         if (!$this->citations->contains($citation)) {
@@ -86,6 +128,12 @@ class Auteur
         return $this;
     }
 
+    /**
+     * Supprime une citation de l'auteur.
+     *
+     * @param Citation $citation La citation à supprimer
+     * @return static L'instance de l'auteur
+     */
     public function removeCitation(Citation $citation): static
     {
         if ($this->citations->removeElement($citation)) {

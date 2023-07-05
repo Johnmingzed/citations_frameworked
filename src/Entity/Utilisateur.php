@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Nom du fichier : Utilisateur.php
+ * Description : Ce fichier contient la classe Utilisateur qui représente une entité utilisateur.
+ */
+
 namespace App\Entity;
 
 use App\Entity\Trait\DateModifTrait;
@@ -9,6 +14,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+/**
+ * Class Utilisateur
+ * Cette classe représente un utilisateur.
+ */
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
 #[ORM\Table(name: 'utilisateurs')]
 #[UniqueEntity(fields: ['mail'], message: 'Il existe déjà un utilisateur lié à cette adresse mail.')]
@@ -50,16 +59,32 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->date_modif = new \DateTime();
     }
 
+    /**
+     * Obtient l'identifiant de l'utilisateur.
+     *
+     * @return int|null L'identifiant de l'utilisateur
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * Obtient l'adresse e-mail de l'utilisateur.
+     *
+     * @return string|null L'adresse e-mail de l'utilisateur
+     */
     public function getMail(): ?string
     {
         return $this->mail;
     }
 
+    /**
+     * Définit l'adresse e-mail de l'utilisateur.
+     *
+     * @param string $mail L'adresse e-mail de l'utilisateur
+     * @return static L'instance de l'utilisateur
+     */
     public function setMail(string $mail): static
     {
         $this->mail = $mail;
@@ -68,8 +93,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * A visual identifier that represents this user.
+     * Obtient l'identifiant de l'utilisateur (utilisé pour l'authentification).
      *
+     * @return string L'identifiant de l'utilisateur
      * @see UserInterface
      */
     public function getUserIdentifier(): string
@@ -78,6 +104,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * Obtient les rôles de l'utilisateur.
+     *
+     * @return array Les rôles de l'utilisateur
      * @see UserInterface
      */
     public function getRoles(): array
@@ -89,6 +118,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
+    /**
+     * Définit les rôles de l'utilisateur.
+     *
+     * @param array $roles Les rôles de l'utilisateur
+     * @return static L'instance de l'utilisateur
+     */
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
@@ -97,6 +132,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * Obtient le mot de passe haché de l'utilisateur.
+     *
+     * @return string|null Le mot de passe haché de l'utilisateur
      * @see PasswordAuthenticatedUserInterface
      */
     public function getPassword(): ?string
@@ -104,6 +142,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
+    /**
+     * Définit le mot de passe haché de l'utilisateur.
+     *
+     * @param string|null $password Le mot de passe haché de l'utilisateur
+     * @return static L'instance de l'utilisateur
+     */
     public function setPassword(?string $password): static
     {
         $this->password = $password;
@@ -112,6 +156,8 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * Efface les informations sensibles de l'utilisateur.
+     *
      * @see UserInterface
      */
     public function eraseCredentials(): void
@@ -120,11 +166,22 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
+    /**
+     * Obtient le prénom de l'utilisateur.
+     *
+     * @return string|null Le prénom de l'utilisateur
+     */
     public function getPrenom(): ?string
     {
         return html_entity_decode($this->prenom);
     }
 
+    /**
+     * Définit le prénom de l'utilisateur.
+     *
+     * @param string|null $prenom Le prénom de l'utilisateur
+     * @return static L'instance de l'utilisateur
+     */
     public function setPrenom(?string $prenom): static
     {
         $this->prenom = $prenom;
@@ -132,11 +189,23 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * Définit le prénom de l'utilisateur.
+     *
+     * @param string|null $prenom Le prénom de l'utilisateur
+     * @return static L'instance de l'utilisateur
+     */
     public function getNom(): ?string
     {
         return html_entity_decode($this->nom);
     }
 
+    /**
+     * Définit le nom de famille de l'utilisateur.
+     *
+     * @param string|null $nom Le nom de famille de l'utilisateur
+     * @return static L'instance de l'utilisateur
+     */
     public function setNom(?string $nom): static
     {
         $this->nom = $nom;
@@ -144,11 +213,22 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * Obtient le token de l'utilisateur.
+     *
+     * @return string|null Le token de l'utilisateur
+     */
     public function getToken(): ?string
     {
         return $this->token;
     }
 
+    /**
+     * Définit le token de l'utilisateur.
+     *
+     * @param string|null $token Le token de l'utilisateur
+     * @return static L'instance de l'utilisateur
+     */
     public function setToken(?string $token): static
     {
         $this->token = $token;
@@ -156,16 +236,29 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * Indique si l'utilisateur est administrateur.
+     *
+     * @return bool|null Vrai si l'utilisateur est administrateur, sinon faux
+     */
     public function isAdmin(): ?bool
     {
         return $this->admin;
     }
 
+    /**
+     * Définit si l'utilisateur est administrateur.
+     * Si l'utilisateur est un administrateur, le rôle ROLE_ADMIN sera ajouté à ses rôles.
+     * Sinon, le rôle ROLE_USER sera ajouté à ses rôles.
+     *
+     * @param bool $admin Vrai si l'utilisateur est administrateur, sinon faux
+     * @return static L'instance de l'utilisateur
+     */
     public function setAdmin(bool $admin): static
     {
-        if($admin == true){
+        if ($admin == true) {
             $roles[] = 'ROLE_ADMIN';
-        }else{
+        } else {
             $roles[] = 'ROLE_USER';
         }
         $this->setRoles($roles);
