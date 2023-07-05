@@ -25,19 +25,34 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class ApiController extends AbstractController
 {
+    private $citationRepository;
+    private $serializer;
+    private $auteurRepository;
+
+    /**
+     * Initialisation de la classe avec injection des dépendances
+     * 
+     * @param AuteurRepository $auteurRepository Le repository des auteurs.
+     * @param CitationRepository $citationRepository Le repository des citations.
+     * @param SerializerInterface $serializer Le service de sérialisation.
+     */
+    public function __construct(AuteurRepository $auteurRepository, CitationRepository $citationRepository, SerializerInterface $serializer)
+    {
+        $this->citationRepository = $citationRepository;
+        $this->serializer = $serializer;
+        $this->auteurRepository = $auteurRepository;
+    }
     /**
      * Récupère toutes les citations
      * Renvoie une liste de toutes les citations au format JSON.
      * 
-     * @param CitationRepository $citationRepository Le repository des citations.
-     * @param SerializerInterface $serializer Le service de sérialisation.
      * @return JsonResponse
      */
     #[Route('/api', name: 'api_citations_all', methods: ['GET'])]
-    public function getAllCitations(CitationRepository $citationRepository, SerializerInterface $serializer): JsonResponse
+    public function getAllCitations(): JsonResponse
     {
-        $liste = $citationRepository->findAll();
-        $jsonListe = $serializer->serialize($liste, 'json', ['groups' => 'getCitation']);
+        $liste = $this->citationRepository->findAll();
+        $jsonListe = $this->serializer->serialize($liste, 'json', ['groups' => 'getCitation']);
         return new JsonResponse($jsonListe, Response::HTTP_OK, [], true);
     }
 
@@ -46,16 +61,14 @@ class ApiController extends AbstractController
      * Renvoie les détails d'un auteur spécifié au format JSON.
      * 
      * @param string $nom Le nom de l'auteur.
-     * @param AuteurRepository $auteurRepository Le repository des auteurs.
-     * @param SerializerInterface $serializer Le service de sérialisation.
      * @return JsonResponse
      */
     #[Route('/api/auteur/{nom}', name: 'api_auteur_details', methods: ['GET'])]
-    public function getAuteurDetails(string $nom, AuteurRepository $auteurRepository, SerializerInterface $serializer): JsonResponse
+    public function getAuteurDetails(string $nom): JsonResponse
     {
-        $auteur = $auteurRepository->findOneBy(['auteur' => $nom]);
+        $auteur = $this->auteurRepository->findOneBy(['auteur' => $nom]);
         if ($auteur) {
-            $jsonAuteur = $serializer->serialize($auteur, 'json', ['groups' => 'getAuteur']);
+            $jsonAuteur = $this->serializer->serialize($auteur, 'json', ['groups' => 'getAuteur']);
             return new JsonResponse($jsonAuteur, Response::HTTP_OK, [], true);
         }
         return new JsonResponse(null, Response::HTTP_NOT_FOUND);
@@ -66,16 +79,14 @@ class ApiController extends AbstractController
      * Renvoie les détails d'une citation spécifiée au format JSON.
      * 
      * @param int $id L'identifiant de la citation.
-     * @param CitationRepository $citationRepository Le repository des citations.
-     * @param SerializerInterface $serializer Le service de sérialisation.
      * @return JsonResponse
      */
     #[Route('/api/citation/{id}', name: 'api_citation_details', methods: ['GET'])]
-    public function getDetailCitation(int $id, CitationRepository $citationRepository, SerializerInterface $serializer): JsonResponse
+    public function getDetailCitation(int $id): JsonResponse
     {
-        $citation = $citationRepository->find($id);
+        $citation = $this->citationRepository->find($id);
         if ($citation) {
-            $jsonCitation = $serializer->serialize($citation, 'json', ['groups' => 'getCitation']);
+            $jsonCitation = $this->serializer->serialize($citation, 'json', ['groups' => 'getCitation']);
             return new JsonResponse($jsonCitation, Response::HTTP_OK, [], true);
         }
         return new JsonResponse(null, Response::HTTP_NOT_FOUND);
@@ -86,14 +97,13 @@ class ApiController extends AbstractController
      * Supprime une citation spécifiée.
      * 
      * @param int $id L'identifiant de la citation.
-     * @param CitationRepository $citationRepository Le repository des citations.
      * @return JsonResponse
      */
     #[Route('/api/citation/{id}', name: 'api_citation_delete', methods: ['DELETE'])]
-    public function deleteCitation(int $id, CitationRepository $citationRepository): JsonResponse
+    public function deleteCitation(int $id): JsonResponse
     {
-        $citation = $citationRepository->find($id);
-        $citationRepository->remove($citation, true);
+        $citation = $this->citationRepository->find($id);
+        $this->citationRepository->remove($citation, true);
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
@@ -103,21 +113,18 @@ class ApiController extends AbstractController
      * Crée une nouvelle citation à partir des données fournies.
      * 
      * @param UrlGeneratorInterface $url L'interface UrlGenerator.
-     * @param AuteurRepository $auteurRepository Le repository des auteurs.
-     * @param CitationRepository $citationRepository Le repository des citations.
-     * @param SerializerInterface $serializer Le service de sérialisation.
      * @param Request $request La requête HTTP.
      * @return JsonResponse
      */
     #[Route('/api/citation', name: 'api_citations_create', methods: ['POST'])]
-    public function createCitation(UrlGeneratorInterface $url, AuteurRepository $auteurRepository, CitationRepository $citationRepository, SerializerInterface $serializer, Request $request): JsonResponse
+    public function createCitation(UrlGeneratorInterface $url, Request $request): JsonResponse
     {
-        $citation = $serializer->deserialize($request->getContent(), Citation::class, 'json');
+        $citation = $this->serializer->deserialize($request->getContent(), Citation::class, 'json');
         $content = $request->toArray();
         $auteurName = $content['auteur'] ?? null;
-        $citation->setAuteurId($auteurRepository->findOneBy(['auteur' => $auteurName]));
-        $citationRepository->save($citation, true);
-        $jsonCitation = $serializer->serialize($citation, 'json', ['groups' => 'getCitation']);
+        $citation->setAuteurId($this->auteurRepository->findOneBy(['auteur' => $auteurName]));
+        $this->citationRepository->save($citation, true);
+        $jsonCitation = $this->serializer->serialize($citation, 'json', ['groups' => 'getCitation']);
         $location = $url->generate('api_citation_details', ['id' => $citation->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
 
         return new JsonResponse($jsonCitation, Response::HTTP_CREATED, ["Location" => $location], true);
@@ -129,16 +136,13 @@ class ApiController extends AbstractController
      * 
      * @param int $id L'identifiant de la citation.
      * @param Request $request La requête HTTP.
-     * @param AuteurRepository $auteurRepository Le repository des auteurs.
-     * @param CitationRepository $citationRepository Le repository des citations.
-     * @param SerializerInterface $serializer Le service de sérialisation.
      * @return JsonResponse
      */
     #[Route('/api/citation/{id}', name: 'api_citation_update', methods: ['PUT'])]
-    public function updateCitation(int $id, Request $request, AuteurRepository $auteurRepository, CitationRepository $citationRepository, SerializerInterface $serializer): JsonResponse
+    public function updateCitation(int $id, Request $request): JsonResponse
     {
-        $currentCitation = $citationRepository->find($id);
-        $updateCitation = $serializer->deserialize(
+        $currentCitation = $this->citationRepository->find($id);
+        $updateCitation = $this->serializer->deserialize(
             $request->getContent(),
             Citation::class,
             'json',
@@ -146,8 +150,8 @@ class ApiController extends AbstractController
         );
         $content = $request->toArray();
         $auteurName = $content['auteur'] ?? null;
-        $updateCitation->setAuteurId($auteurRepository->findOneBy(['auteur' => $auteurName]));
-        $citationRepository->save($updateCitation, true);
+        $updateCitation->setAuteurId($this->auteurRepository->findOneBy(['auteur' => $auteurName]));
+        $this->citationRepository->save($updateCitation, true);
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }

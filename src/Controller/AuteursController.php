@@ -22,61 +22,64 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class AuteursController extends AbstractController
 {
+    private $auteurRepository;
 
-    public function __construct()
+    /**
+     * Initialisation de la classe avec injection de dépendance
+     * 
+     * @param AuteurRepository $auteurRepository Le repository des auteurs.
+     */
+    public function __construct(AuteurRepository $auteurRepository)
     {
-        
+        $this->auteurRepository = $auteurRepository;
     }
-    
+
     /**
      * Affiche la liste des auteurs par ordre alphabétique.
      * 
-     * @param AuteurRepository $auteurRepository Le repository des auteurs.
      * @return Response Vue Twig affichant la liste des auteurs.
      */
     #[Route('/auteurs', name: 'app_auteurs')]
-    public function index(AuteurRepository $auteurRepository): Response
+    public function index(): Response
     {
         return $this->render('auteurs/index.html.twig', [
             'controller_name' => 'AuteursController',
-            'auteurs' => $auteurRepository->findBy([], ['auteur' => 'asc'])
+            'auteurs' => $this->auteurRepository->findBy([], ['auteur' => 'asc'])
         ]);
     }
 
     /**
      * Affiche les détails d'un auteur sélectionné par son ID.
      * 
-     * @param AuteurRepository $auteurRepository Le repository des auteurs.
      * @param int $id L'ID d'un auteur.
      * @return Reponse Vue Twig affichant les détails d'un auteur.
      */
     #[Route('/auteur/details/{id}', name: 'app_auteurs_detail')]
-    public function detail(AuteurRepository $auteurRepository, int $id): Response
+    public function detail(int $id): Response
     {
-        if (!$auteurRepository->find($id)) {
+        if (!$this->auteurRepository->find($id)) {
             // Retour sur la page d'index
             $this->addFlash('danger', 'Action impossible : Référence inexistante.');
             return $this->redirectToRoute('app_auteurs');
         }
         return $this->render('auteurs/detail.html.twig', [
             'controller_name' => 'AuteursController',
-            'auteur' => $auteurRepository->find($id)
+            'auteur' => $this->auteurRepository->find($id)
         ]);
     }
 
     /**
      * Modifie un auteur existant sélectionné par son ID.
      * 
-     * @param AuteurRepository $auteurRepository Le repository des auteurs.
      * @param int $id L'ID d'un auteur.
-     * @param Request $request Modification à apporter à l'auteur transmises via POST.
+     * @param Request $request Modifications à apporter à l'auteur, transmises via POST.
      * @return Reponse Vue Twig affichant un formulaire de modification ou un message.
      */
     #[Route('/auteur/modifier/{id}', name: 'app_auteurs_modifier')]
-    public function modification(AuteurRepository $auteurRepository, int $id, Request $request): Response
+    public function modification(int $id, Request $request): Response
     {
         // Récupération de l'auteur via son ID
-        $auteur = $auteurRepository->find($id);
+        $auteur = $this->auteurRepository->find($id);
 
         // Retour sur la page d'index en cas de référence inexistante
         if (!$auteur) {
@@ -95,7 +98,7 @@ class AuteursController extends AbstractController
             $message_type = 'success';
 
             try {
-                $auteurRepository->save($auteur, true);
+                $this->auteurRepository->save($auteur, true);
             } catch (Exception $e) {
                 $message = 'Action impossible : ' . $e->getMessage();
                 $message_type = 'danger';
@@ -119,12 +122,11 @@ class AuteursController extends AbstractController
     /**
      * Ajoute un nouvel auteur.
      *
-     * @param AuteurRepository $auteurRepository Le repository des auteurs.
      * @param Request $request Informations sur l'auteur à créer transmises via POST.
      * @return Reponse Vue Twig affichant un formulaire de création ou un message.
      */
     #[Route('/auteur/ajouter/', name: 'app_auteurs_ajouter')]
-    public function ajouter(AuteurRepository $auteurRepository, Request $request): Response
+    public function ajouter(Request $request): Response
     {
         // Création d'un entité auteur
         $auteur = new Auteur();
@@ -140,7 +142,7 @@ class AuteursController extends AbstractController
             $message_type = 'success';
 
             try {
-                $auteurRepository->save($auteur, true);
+                $this->auteurRepository->save($auteur, true);
             } catch (Exception $e) {
                 $message = 'Action impossible : ' . $e->getMessage();
                 $message_type = 'danger';
@@ -163,15 +165,14 @@ class AuteursController extends AbstractController
     /**
      * Supprime un auteur sélectionné par son ID.
      * 
-     * @param AuteurRepository $auteurRepository Le repository des auteurs.
      * @param int $id L'ID d'un auteur.
      * @return Reponse Vue Twig affichant un message.
      */
     #[Route('/auteur/supprimer/{id}', name: 'app_auteurs_supprimer')]
-    public function suppression(AuteurRepository $auteurRepository, int $id): Response
+    public function suppression(int $id): Response
     {
         // Récupération de l'auteur via son ID
-        $auteur = $auteurRepository->find($id);
+        $auteur = $this->auteurRepository->find($id);
 
         // Retour sur la page d'index avec affichage d'un message si l'auteur n'existe pas
         if (!$auteur) {
@@ -181,7 +182,7 @@ class AuteursController extends AbstractController
 
         // Suppresion de l'auteur
         $auteur_name = $auteur->getAuteur(); // Stockage du nom de l'auteur 
-        $auteurRepository->remove($auteur, true);
+        $this->auteurRepository->remove($auteur, true);
 
         // Retour sur la page d'index avec affichage d'un message de réussite
         $this->addFlash('success', $auteur_name . ' a été effacé.');
