@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Nom du fichier : ProfilController.php
+ * Description : Ce fichier contient la classe ProfilController gérant les profils d'utilisateurs.
+ */
+
 namespace App\Controller;
 
 use App\Form\UtilisateurFormType;
