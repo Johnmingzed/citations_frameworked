@@ -7,7 +7,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                {% if is_granted('ROLE_USER') %}
+                {% if is_granted('ROLE_TESTER') %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
@@ -26,7 +26,7 @@
                     <a class="nav-link" href="{{ path('app_auteurs') }}">Les auteurs</a>
                 </li>
                 {% endif %}
-                {% if is_granted('ROLE_USER') %}
+                {% if is_granted('ROLE_TESTER') %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
@@ -75,10 +75,12 @@
                             Profil
                         </a>
                         <ul class="dropdown-menu">
+                            {% if is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') %}
                             <li><a class="dropdown-item" href="{{ path('app_profil') }}">Modifier</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
+                            {% endif %}
                             <li><a class="dropdown-item" href="{{ path('app_logout') }}">Déconnexion</a></li>
                         </ul>
                     </li>

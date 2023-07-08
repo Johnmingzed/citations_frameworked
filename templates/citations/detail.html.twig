@@ -21,7 +21,7 @@
     {% else %}
     <p class="text-end fst-italic fs-4">- Anonyme -</p>
     {% endif %}
-    {% if is_granted('ROLE_USER') %}
+    {% if is_granted('ROLE_TESTER') %}
     <div class="text-end">
         <a class="btn btn-outline-primary m-1" href="{{ path('app_citations_modifier', {id: citation.id}) }}"
             role="button">Modifier</a>

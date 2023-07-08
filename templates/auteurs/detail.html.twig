@@ -16,7 +16,7 @@
     {% else %}
     <p class="text-center">Aucune information biographique enregistrée</p>
     {% endif %}
-    {% if is_granted('ROLE_USER') %}
+    {% if is_granted('ROLE_TESTER') %}
     <div class="text-end">
         <a class="btn btn-outline-primary m-1" href="{{ path('app_auteurs_modifier', {id: auteur.id}) }}"
             role="button">Modifier</a>
